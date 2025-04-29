@@ -6,7 +6,11 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
   <style>
-    html, body, #map { height: 100%; margin: 0; padding: 0; }
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
   </style>
 </head>
 <body>
@@ -19,7 +23,7 @@
     }).addTo(map);
 
     function showPlaygrounds(lat, lon) {
-      const overpassUrl = https://overpass-api.de/api/interpreter?data=[out:json];node["leisure"="playground"](around:2000,${lat},${lon});out;;
+      const overpassUrl = 'https://overpass-api.de/api/interpreter?data=[out:json];node["leisure"="playground"](around:2000,' + lat + ',' + lon + ');out;';
 
       fetch(overpassUrl)
         .then(response => response.json())
