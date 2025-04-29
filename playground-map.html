@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Playground Map</title>
+  <title>Nearby Playgrounds</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -12,14 +12,39 @@
 <body>
   <div id="map"></div>
   <script>
-    const map = L.map('map').setView([19.076, 72.8777], 13); // Your city’s coordinates
+    const map = L.map('map').setView([0, 0], 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // Add a marker (example)
-    L.marker([19.076, 72.8777]).addTo(map).bindPopup('Playground 1').openPopup();
+    function showPlaygrounds(lat, lon) {
+      const overpassUrl = https://overpass-api.de/api/interpreter?data=[out:json];node["leisure"="playground"](around:2000,${lat},${lon});out;;
+
+      fetch(overpassUrl)
+        .then(response => response.json())
+        .then(data => {
+          data.elements.forEach(el => {
+            L.marker([el.lat, el.lon]).addTo(map)
+              .bindPopup("Playground");
+          });
+        })
+        .catch(err => console.error(err));
+    }
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      map.setView([lat, lon], 15);
+
+      L.marker([lat, lon]).addTo(map)
+        .bindPopup("You are here").openPopup();
+
+      showPlaygrounds(lat, lon);
+    }, function(error) {
+      alert("Location access denied.");
+    });
   </script>
 </body>
 </html>
